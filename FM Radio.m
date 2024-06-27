@@ -1,22 +1,22 @@
 % Define parameters
-fc1 = 1000;         % Carrier frequency of the first signal
-fc2 = 2000;         % Carrier frequency of the second signal
-fDev = 50;          % Frequency deviation
-fs = 8000;          % Sampling rate
-gain = 2;           % Amplifier gain
-t = 0:1/fs:1-1/fs;  % Time vector
+fc1 = 1000;             % Carrier frequency of the first signal
+fc2 = 2000;             % Carrier frequency of the second signal
+fs = 8000;              % Sampling frequency (sampling rate)
+fDev = 50;              % Frequency deviation
+gain = 2;               % Amplifier gain
+t = 0:1/fs:1-1/fs;      % Time vector
 
 % Define the input signals
 x1 = sin(2*pi*100*t);   % First signal
 x2 = sin(2*pi*200*t);   % Second signal
 
 % Plot the input signals in time domain
-t = linspace(0, length(x1)/fs, length(x1));
 figure;
+t = linspace(0, length(x1)/fs, length(x1));
 subplot(1,2,1)
-plot(t,x1);
+plot(t, x1);
 xlim([0 0.1])
-title('ٍSignal 1 (Time Domain)')
+title('Signal 1 (Time Domain)')
 xlabel('time')
 ylabel('amplitude')
 pause(2);
@@ -25,7 +25,7 @@ pause(5);
 
 t = linspace(0, length(x2)/fs, length(x2));
 subplot(1,2,2)
-plot(t,x2);
+plot(t, x2);
 xlim([0 0.1])
 title('Signal 2 (Time Domain)')
 xlabel('time')
@@ -39,8 +39,8 @@ X1 = fftshift(fft(x1));
 X2 = fftshift(fft(x2));
 
 % Plot the input signals in frequency domain
-f = fs/2*linspace(-1, 1, fs);
 figure;
+f = fs/2*linspace(-1, 1, fs);
 subplot(1,2,1)
 plot(f, abs(X1));
 xlim([-fs/2 fs/2])
@@ -82,7 +82,7 @@ title('Modulation of Signal 2')
 xlabel('frequency')
 ylabel('amplitude')
 
-t = linspace(0,length(y)/fs,length(y));
+t = linspace(0, length(y)/fs, length(y));
 subplot(2,2,3)
 plot(t, y);
 xlim([0 0.1])
@@ -104,12 +104,11 @@ y_amp = y * gain;
 % Select the desired signal
 switch_pos = 1;         % Switch position (0 or 1)
 if switch_pos == 0
-    y_sel = y2;
-    f0 = fc2;
-else
-    y_sel = y1;
     f0 = fc1;
+else
+    f0 = fc2;
 end
+y_sel = bandpass(y_amp, [f0-250, f0+250], fs);
 
 % Demodulate the selected signal
 y_demod = fmdemod(y_sel, f0, fs, fDev); % Demodulated signal
@@ -123,7 +122,7 @@ t = linspace(0, length(y_audio_sel)/fs, length(y_audio_sel));
 figure;
 subplot(1,2,1)
 plot(t, y_audio_sel);
-xlim([0 0.1])
+xlim([0.01 0.1])
 title('Output Signal (Time)')
 xlabel('time')
 ylabel('amplitude')
